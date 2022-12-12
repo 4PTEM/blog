@@ -1,43 +1,48 @@
 {
-    "name": "blog",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "compile": "tsc",
-        "dev": "nodemon --exec ts-node ./src/main.ts",
-        "start": "node ./out/main.js",
-        "eslint": "eslint \"src/**/*.ts\"",
-        "eslint-fix": "eslint --fix \"src/**/*.ts\""
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/4PTEM/blog.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/4PTEM/blog/issues"
-    },
-    "homepage": "https://github.com/4PTEM/blog#readme",
-    "dependencies": {
-        "@prisma/client": "^4.7.1",
-        "@types/express": "^4.17.14",
-        "dotenv": "^16.0.3",
-        "express": "^4.18.2",
-        "jsonwebtoken": "^8.5.1",
-        "pg": "^8.6.0"
-    },
-    "devDependencies": {
-        "@types/jsonwebtoken": "^8.5.9",
-        "@types/node": "^17.0.36",
-        "@types/pg": "^8.6.5",
-        "@typescript-eslint/eslint-plugin": "^5.30.5",
-        "@typescript-eslint/parser": "^5.30.5",
-        "eslint": "^8.16.0",
-        "nodemon": "^2.0.15",
-        "prisma": "^4.7.1",
-        "ts-node": "^10.7.0",
-        "typescript": "^4.7.2"
-    }
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "Ссылка на диаграмму бд в miro https://miro.com/app/board/uXjVPFNXyuU=/?share_link_id=855121355118 ### Проектирование приложения DFD диаграмма https://miro.com/app/board/uXjVPFMav5s=/ UML Use case диаграмма ![Blog_UML_UseCaseDiagram](https://user-images.githubusercontent.com/55155356/200916030-45327114-18cb-4846-9700-20af2372db00.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "dev": "nodemon --exec ts-node ./src/main.ts",
+    "start": "node ./out/main.js",
+    "eslint": "eslint \"src/**/*.ts\"",
+    "eslint-fix": "eslint --fix \"src/**/*.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4PTEM/blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4PTEM/blog/issues"
+  },
+  "homepage": "https://github.com/4PTEM/blog#readme",
+  "dependencies": {
+    "@prisma/client": "^4.7.1",
+    "@types/cookie-parser": "^1.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.6.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.14",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/node": "^17.0.45",
+    "@types/pg": "^8.6.5",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.16.0",
+    "nodemon": "^2.0.15",
+    "prisma": "^4.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "keywords": []
 }

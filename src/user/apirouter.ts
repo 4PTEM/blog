@@ -1,9 +1,12 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { IAuthorRepository } from './repository';
 import * as UserService from './service';
+import { validateEmail } from './utils';
 
-export function getPublicApiRouter(AuthorRepository: IAuthorRepository) {
+export function getAuthenticationApiRouter(AuthorRepository: IAuthorRepository) {
     const router = Router();
+
+    router.use(express.json());
 
     router.post('/register', async (req, res) => {
         try {
@@ -11,7 +14,7 @@ export function getPublicApiRouter(AuthorRepository: IAuthorRepository) {
             if (!username || !/^[A-z0-9_]*$/.test(username)) {
                 throw new Error('Username is not valid');
             }
-            if (!password || !/^[A-z0-9$!_-*@]*$/.test(password)) {
+            if (!password || !/^[A-z0-9$!_\-*@]*$/.test(password)) {
                 throw new Error('Password is not valid');
             }
             if (!email || !validateEmail(email)) {
@@ -21,32 +24,28 @@ export function getPublicApiRouter(AuthorRepository: IAuthorRepository) {
             res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
     router.post('/login', async (req, res) => {
         try {
-            const { username, email, password } = req.body;
-            if (!password || !/^[A-z0-9$!_-*@]*$/.test(password)) {
-                throw new Error('Password is not valid');
-            }
-            if (!email || !validateEmail(email)) {
-                throw new Error('Email is not valid');
-            }
+            const { email, password } = req.body;
             const access_token = await UserService.authenticateUser(AuthorRepository, email, password);
             res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
     return router;
 }
 
-export function getProtectedApiRouter(AuthorRepository: IAuthorRepository) {
+export function getPublicAuthorApiRouter(AuthorRepository: IAuthorRepository) {
     const router = Router();
 
-    router.get('/view/:id', async (req, res) => {
+    router.get('/get/:id', async (req, res) => {
         try {
             const { id } = req.params;
             if (!id || isNaN(Number(id))) throw new Error('User does not exists');
@@ -57,7 +56,20 @@ export function getProtectedApiRouter(AuthorRepository: IAuthorRepository) {
             res.json({ ok: true, data: { user } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
+    });
+
+    return router;
+}
+
+export function getProtectedAuthorApiRouter(AuthorRepository: IAuthorRepository) {
+    const router = Router();
+
+    router.get('/myprofile', async (req, res) => {
+        const { id } = req.body.user;
+        const user = await UserService.getAuthor(AuthorRepository, id);
+        res.json({ ok: true, data: { user } });
     });
 
     router.put('/update', async (req, res) => {
@@ -68,17 +80,18 @@ export function getProtectedApiRouter(AuthorRepository: IAuthorRepository) {
             if (!username || !/^[A-z0-9_]*$/.test(username)) {
                 throw new Error('Username is not valid');
             }
-            if (!password || !/^[A-z0-9$!_-*@]*$/.test(password)) {
+            if (!password || !/^[A-z0-9$!_\-*@]*$/.test(password)) {
                 throw new Error('Password is not valid');
             }
             if (!email || !validateEmail(email)) {
                 throw new Error('Email is not valid');
             }
 
-            const user = await UserService.updateAuthor(AuthorRepository, id, { username, email, password });
-            res.json({ ok: true, data: { user } });
+            const access_token = await UserService.updateAuthor(AuthorRepository, id, { username, email, password });
+            res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
@@ -89,6 +102,7 @@ export function getProtectedApiRouter(AuthorRepository: IAuthorRepository) {
             res.json({ ok: true });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 

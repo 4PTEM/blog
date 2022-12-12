@@ -1,9 +1,16 @@
-import { post } from '@prisma/client';
+import { author, category, post } from '@prisma/client';
 import prisma from '../db/pool';
 
 export interface IPostRepository {
     create(author_id: number, category_id: number, title: string, content: string, date_of_publication?: Date): Promise<post>;
-    get(id: number): Promise<post | null>;
+    get(id: number): Promise<{
+        title: string;
+        content: string;
+        date_of_publication: Date;
+        author: author;
+        category: category;
+        id: number;
+    } | null>;
     list(params: Partial<{ author_id: number; category_id: number }>, limit: number, offset: number): Promise<post[]>;
     update(id: number, params: Partial<{ category_id: number; title: string; content: string }>): Promise<post>;
     delete(id: number): Promise<void>;
@@ -15,8 +22,8 @@ export class PostRepository implements IPostRepository {
         return post;
     }
 
-    async get(id: number): Promise<post | null> {
-        const post = await prisma.post.findUnique({ where: { id } });
+    async get(id: number): Promise<{ title: string; content: string; date_of_publication: Date; author: author; category: category; id: number } | null> {
+        const post = await prisma.post.findUnique({ select: { id: true, author: true, category: true, title: true, content: true, date_of_publication: true }, where: { id } });
         return post;
     }
 
@@ -34,3 +41,5 @@ export class PostRepository implements IPostRepository {
         await prisma.post.delete({ where: { id } });
     }
 }
+
+export const postRepository = new PostRepository();

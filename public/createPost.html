@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"
+        ></script>
+        <link rel="stylesheet" href="./select.css" />
+        <script src="./navbar.js"></script>
+        <title>Написать публикацию</title>
+    </head>
+    <body>
+        <div class="w-75 m-auto mt-4">
+            <h1 class="h1">Новая публикация</h1>
+            <form onsubmit="return validateForm(this);">
+                <div class="form-floating mb-2">
+                    <input type="text" class="form-control" id="floatingTitle" placeholder="Заголовок" />
+                    <label for="floatingTitle">Заголовок</label>
+                    <div class="invalid-feedback">Пожалуйста, введите корректный заголовок</div>
+                </div>
+                <div class="form-floating mb-2">
+                    <select class="d-block selectpicker" data-live-search="true" id="categorySelect"></select>
+                </div>
+                <div class="form-floating mb-2">
+                    <textarea name="content" class="form-control" id="floatingContent" placeholder="Содержание"></textarea>
+                    <label for="floatingContent">Содержание</label>
+                    <div class="invalid-feedback">Пожалуйста, введите корректное содержание</div>
+                </div>
+                <button class="mb-2 btn btn-lg btn-outline-success" type="submit">Создать</button>
+            </form>
+        </div>
+        <script src="./actions.js"></script>
+        <script>
+            async function loadForm() {
+                categorySelect.innerHTML = '<option value="" selected disabled hidden>Выберите категорию</option>';
+                categorySelect[0].selected = true;
+                let categories = await getCategories();
+                categories.forEach((category) => {
+                    const option = document.createElement('option');
+                    option.selected = false;
+                    option['data-id'] = category.id;
+                    option.innerHTML = category.name;
+                    categorySelect.add(option);
+                });
+            }
+
+            loadForm();
+
+            function validateForm(form) {
+                const selectedElement = categorySelect.options[categorySelect.selectedIndex];
+                const category_id = selectedElement['data-id'];
+                const title = form[0].value;
+                const content = form[2].value;
+
+                if (!category_id || isNaN(category_id)) {
+                    categorySelect.classList.add('is invalid');
+                }
+                if (!title || !/^[A-zА-я \-_0-9]*$/.test(title)) {
+                    form[0].classList.add('is-invalid')
+                }
+                if (!content) {
+                    form[2].classList.add('is-invalid')
+                }
+                createPost(category_id, title, content).then((newPost) => {
+                    window.location.href = `http://localhost/post.html?id=${newPost.id}`;
+                });
+
+                return false;
+            }
+        </script>
+    </body>
+</html>

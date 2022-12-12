@@ -8,7 +8,7 @@ datasource db {
 }
 
 model author {
-  id       BigInt @id(map: "author_pk") @default(autoincrement())
+  id       Int    @id(map: "author_pk") @default(autoincrement())
   username String
   email    String
   password String
@@ -16,15 +16,15 @@ model author {
 }
 
 model category {
-  id   BigInt @id(map: "category_pk") @default(autoincrement())
+  id   Int    @id(map: "category_pk") @default(autoincrement())
   name String
   post post[]
 }
 
 model post {
-  id                  BigInt   @id(map: "post_pk") @default(autoincrement())
-  author_id           BigInt
-  category_id         BigInt
+  id                  Int      @id(map: "post_pk") @default(autoincrement())
+  author_id           Int
+  category_id         Int
   title               String
   content             String
   date_of_publication DateTime @db.Timestamp(6)

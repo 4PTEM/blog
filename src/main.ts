@@ -1,22 +1,34 @@
 import express from 'express';
-import { getProtectedApiRouter, getPublicApiRouter } from './user/apirouter';
 import { authorRepository } from './user/repository';
 import * as jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import path from 'path';
+import { getAuthenticationApiRouter, getProtectedAuthorApiRouter, getPublicAuthorApiRouter } from './user/apirouter';
+import { getProtectedPostApiRouter, getPublicPostApiRouter } from './post/apirouter';
+import { postRepository } from './post/repository';
+import { getProtecteCategorydApiRouter, getPublicCategoryApiRouter } from './category/apirouter';
+import { categoryRepository } from './category/repository';
 
 const app = express();
 
-app.use('/authentication', getPublicApiRouter(authorRepository));
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static(path.resolve(__dirname, '../public')));
+
+app.use('/authentication', getAuthenticationApiRouter(authorRepository));
+app.use('/user/public', getPublicAuthorApiRouter(authorRepository));
+app.use('/categories/public', getPublicCategoryApiRouter(categoryRepository));
+app.use('/posts/public', getPublicPostApiRouter(postRepository));
 
 app.use('/', (req, res, next) => {
     try {
         if (!process.env.JWT_SECRET) throw new Error('JWT SECRET IS NOT DEFINED');
 
-        const authorizationHeader = req.headers.authorization;
-        if (!authorizationHeader) throw new Error('Authentication failed');
-
-        const jsonWebToken = authorizationHeader.split(' ')[1];
-        jwt.verify(jsonWebToken, process.env.JWT_SECRET, (err, user) => {
-            if(err) throw new Error('Authentication failed');
+        const jsonWebToken = req.cookies.access_token;
+        jwt.verify(jsonWebToken, process.env.JWT_SECRET, (err: any, user: any) => {
+            if (err) throw new Error('Authentication failed');
             req.body.user = user;
             next();
         });
@@ -25,4 +37,10 @@ app.use('/', (req, res, next) => {
     }
 });
 
-app.use('/user', getProtectedApiRouter(authorRepository));
+app.use('/user/protected/', getProtectedAuthorApiRouter(authorRepository));
+app.use('/categories/protected/', getProtecteCategorydApiRouter(categoryRepository));
+app.use('/posts/protected/', getProtectedPostApiRouter(postRepository));
+
+app.listen(80, () => {
+    console.log('HTTP started on port 80...');
+});

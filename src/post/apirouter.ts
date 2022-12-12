@@ -2,7 +2,43 @@ import { Router } from 'express';
 import { IPostRepository } from './repository';
 import * as PostService from './service';
 
-export function getProtectedApiRouter(PostRepository: IPostRepository) {
+export function getPublicPostApiRouter(PostRepository: IPostRepository) {
+    const router = Router();
+
+    router.get('/get/:id', async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (!id || isNaN(id)) {
+                throw new Error('Post does not exists');
+            }
+
+            const post = await PostService.getPost(PostRepository, id);
+            res.json({ ok: true, data: { post } });
+        } catch (error: any) {
+            res.json({ ok: false, error: error.message });
+            console.log(error);
+        }
+    });
+
+    router.get('/list', async (req, res) => {
+        try {
+            let limit = Number(req.query.limit) || undefined;
+            let offset = Number(req.query.offset) || undefined;
+            let author_id = Number(req.query.author_id) || undefined;
+            let category_id = Number(req.query.category_id) || undefined;
+
+            const posts = await PostService.listPosts(PostRepository, { author_id, category_id }, limit, offset);
+            res.json({ ok: true, data: { posts } });
+        } catch (error: any) {
+            res.json({ ok: false, error: error.message });
+            console.log(error);
+        }
+    });
+
+    return router;
+}
+
+export function getProtectedPostApiRouter(PostRepository: IPostRepository) {
     const router = Router();
 
     router.post('/create', async (req, res) => {
@@ -22,43 +58,7 @@ export function getProtectedApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { post } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-        }
-    });
-
-    router.get('/get/:id', async (req, res) => {
-        try {
-            const id = Number(req.params.id);
-            if (!id || isNaN(id)) {
-                throw new Error('Post does not exists');
-            }
-
-            const post = await PostService.getPost(PostRepository, id);
-            res.json({ ok: true, data: { post } });
-        } catch (error: any) {
-            res.json({ ok: false, error: error.message });
-        }
-    });
-
-    router.get('/list', async (req, res) => {
-        try {
-            const { limit, offset, author_id, category_id } = req.query;
-            if (limit && isNaN(Number(limit))) {
-                throw new Error('Limit is not valid');
-            }
-            if (offset && isNaN(Number(offset))) {
-                throw new Error('Offset is not valid');
-            }
-            if (author_id && isNaN(Number(author_id))) {
-                throw new Error('Author id is not valid');
-            }
-            if (category_id && isNaN(Number(category_id))) {
-                throw new Error('Author id is not valid');
-            }
-
-            const posts = await PostService.listPosts(PostRepository, { author_id: Number(author_id), category_id: Number(category_id) }, Number(limit), Number(offset));
-            res.json({ ok: true, data: { posts } });
-        } catch (error: any) {
-            res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
@@ -82,6 +82,7 @@ export function getProtectedApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { post } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
@@ -96,6 +97,7 @@ export function getProtectedApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
+            console.log(error);
         }
     });
 
