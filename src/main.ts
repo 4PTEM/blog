@@ -15,6 +15,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
+app.get('/', (req, res) => {
+    res.redirect('http://localhost/homepage.html');
+});
+
 app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.use('/authentication', getAuthenticationApiRouter(authorRepository));
