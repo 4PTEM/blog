@@ -24,7 +24,7 @@ export function getAuthenticationApiRouter(AuthorRepository: IAuthorRepository) 
             res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -35,7 +35,7 @@ export function getAuthenticationApiRouter(AuthorRepository: IAuthorRepository) 
             res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -56,7 +56,7 @@ export function getPublicAuthorApiRouter(AuthorRepository: IAuthorRepository) {
             res.json({ ok: true, data: { user } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -91,7 +91,7 @@ export function getProtectedAuthorApiRouter(AuthorRepository: IAuthorRepository)
             res.json({ ok: true, data: { access_token } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -102,7 +102,7 @@ export function getProtectedAuthorApiRouter(AuthorRepository: IAuthorRepository)
             res.json({ ok: true });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 

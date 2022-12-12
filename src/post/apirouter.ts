@@ -16,7 +16,7 @@ export function getPublicPostApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { post } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -31,7 +31,7 @@ export function getPublicPostApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { posts } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -58,7 +58,7 @@ export function getProtectedPostApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { post } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -82,7 +82,7 @@ export function getProtectedPostApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true, data: { post } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -97,7 +97,7 @@ export function getProtectedPostApiRouter(PostRepository: IPostRepository) {
             res.json({ ok: true });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 

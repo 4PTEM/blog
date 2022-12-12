@@ -11,7 +11,7 @@ export function getPublicCategoryApiRouter(CategoryRepository: ICategoryReposito
             res.json({ ok: true, data: { categories } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -23,7 +23,7 @@ export function getPublicCategoryApiRouter(CategoryRepository: ICategoryReposito
             res.json({ ok: true, data: { category } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
@@ -43,7 +43,7 @@ export function getProtecteCategorydApiRouter(CategoryRepository: ICategoryRepos
             res.json({ ok: true, data: { category } });
         } catch (error: any) {
             res.json({ ok: false, error: error.message });
-            console.log(error);
+            console.log(error.message);
         }
     });
 
